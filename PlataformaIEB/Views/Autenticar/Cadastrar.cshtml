@@ -1,0 +1,50 @@
+﻿@model PlataformaIEB.Models.Pesquisador
+@{
+    ViewBag.Title = "Cadastrar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Cadastrar</h2>
+
+<div class="row">
+    <div class="col-md-10">
+        @using (Html.BeginForm())
+        {
+            <div class="form-group">
+                @Html.DisplayNameFor(m => m.Nome)
+                @Html.EditorFor(m => m.Nome, new { @class = "form-control" })
+                <span class="help-block">
+                    @Html.ValidationMessageFor(m => m.Nome)
+                </span>
+            </div>
+
+            <div class="form-group">
+                @Html.DisplayNameFor(m => m.Lattes)
+                @Html.EditorFor(m => m.Lattes, new { @class = "form-control" })
+                <span class="help-block">
+                    @Html.ValidationMessageFor(m => m.Lattes)
+                </span>
+            </div>
+
+            <div class="form-group">
+                @Html.DisplayNameFor(m => m.Email)
+                @Html.EditorFor(m => m.Email, new { @class = "form-control" })
+                <span class="help-block">
+                    @Html.ValidationMessageFor(m => m.Email)
+                </span>
+            </div>
+
+            <div class="form-group">
+                @Html.DisplayNameFor(m => m.Senha)
+                @Html.EditorFor(m => m.Senha, new { @class = "form-control" })
+                <span class="help-block">
+                    @Html.ValidationMessageFor(m => m.Senha)
+                </span>
+            </div>
+
+            <input type="submit" class="btn btn-default" value="Salvar" />
+
+        }
+    </div>
+
+</div>

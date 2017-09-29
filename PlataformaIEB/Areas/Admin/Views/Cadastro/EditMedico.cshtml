@@ -1,0 +1,30 @@
+﻿@model PlataformaIEB.Models.Medico
+@{
+    ViewBag.Title = "Editar Informações";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@if (Model == null)
+{
+    <h3>Médico não encontrado</h3>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-offset-1">
+            @using (Html.BeginForm())
+            {
+                @Html.Partial("_FormMedico", Model)
+
+                <div class="form-group">
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(m => m.Senha)
+                    <input type="submit" class="btn btn-success" value="Salvar" />
+                    @Html.ActionLink("Voltar", "PrincipalMedico", new { area = "Admin", Controller = "Cadastro" }, new { @class = "btn btn-danger" })
+                </div>
+            }
+        </div>
+    </div>
+}
+
+

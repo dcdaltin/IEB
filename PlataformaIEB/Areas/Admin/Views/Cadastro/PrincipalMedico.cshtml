@@ -1,0 +1,34 @@
+﻿@model List<PlataformaIEB.Models.Medico>
+
+@{
+    ViewBag.Title = "Cadastro de Médicos";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row text-right">
+    @Html.ActionLink("Cadastrar Médico", "CadMedico","Cadastro", new { @class = "btn btn-success" })
+</div>
+<div class="row">
+    <div class="col col-md-offset-1">
+        <table class="table table-responsive">
+            <thead>
+                <tr>
+                    <th>CRM</th>
+                    <th>Nome</th>
+                    <th>E-Mail</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var medico in Model)
+                {
+                    <tr>
+                        <td>@medico.CRM</td>
+                        <td>@medico.Nome</td>
+                        <td>@medico.Email</td>
+                        <td>@Html.ActionLink("Editar", "EditMedico/" + @medico.Id, new { area = "Admin", Controller = "Cadastro" }, new { @class = "btn btn-danger" })</td>
+                    </tr>
+                }
+            </tbody>
+        </table>    
+    </div>
+</div>

@@ -1,0 +1,12 @@
+﻿@model PlataformaIEB.Models.Clinico
+    
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.VolTesticulo)
+                @Html.CheckBoxFor(m => m.VolTesticulo, new { @class = "form-control" })
+                <span id="helpBlock2" class="help-block">
+                    @Html.ValidationMessageFor(m => m.VolTesticulo)
+                </span>
+            </div>
+
+

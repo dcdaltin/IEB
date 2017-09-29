@@ -1,0 +1,29 @@
+﻿@model PlataformaIEB.Models.Medico
+@{
+    ViewBag.Title = "Cadastro de Médico";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="row">
+    <div class="col-md-offset-1">
+        @using (Html.BeginForm())
+        {
+            @Html.Partial("_FormMedico", Model)
+            <div class="form-group">
+                @Html.LabelFor(m => m.Senha)
+                @Html.EditorFor(m => m.Senha, new { @class = "form-control" })
+                <span id="helpBlock2" class="help-block">
+                    @Html.ValidationMessageFor(m => m.Senha)
+                </span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" class="btn btn-success" value="Salvar" />
+                @Html.ActionLink("Voltar", "PrincipalMedico", new { area = "Admin", Controller = "Cadastro" }, new { @class = "btn btn-danger" })
+            </div>
+        }
+    </div>
+</div>
+
+

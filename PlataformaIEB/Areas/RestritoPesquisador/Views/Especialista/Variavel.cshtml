@@ -1,0 +1,60 @@
+﻿@model PlataformaIEB.ViewModel.VMVar
+@{
+    ViewBag.Title = "Variavel";
+    Layout = "~/Areas/RestritoPesquisador/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-2">
+        <table class="table table-responsive">
+            <caption><h2>Variaveis</h2></caption>
+            <tbody>
+                @foreach (var item in Model.Variaveis)
+                {
+                    <tr>
+                        <td>@Html.ActionLink(item.Nome, "EditVar/" + item.ID)</td>
+                        @if (item.Objetivo)
+                        {
+                            <td>Objetivo</td>
+                        }
+                        else{<td> </td>}
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="col-lg-8">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor( o => o.BaseID)
+
+            <h2>Nova Variavel</h2>
+            <p>Para adicionar uma nova variavel, entre com um novo nome e precione o botão Adicionar</p>
+            <div class="row">
+                <div class="form-group">
+                    <table class="table table-responsive">
+                        <tbody>
+                            <tr>
+                                <td>@Html.DisplayNameFor(m => m.Nome)</td>
+                                <td>
+                                    @Html.EditorFor(m => m.Nome, new { @class = "form-control" })
+                                </td>
+                                <td>@Html.DisplayNameFor(m => m.Obj)</td>
+                                <td>@Html.EditorFor(m => m.Obj, new { @class = "form-control" })</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <span class="help-block">
+                        @Html.ValidationMessageFor(m => m.Nome)
+                    </span>
+                </div>
+            </div>
+            <div class="row">
+                <input type="submit" class="btn btn-default" value="Adicionar" />
+                @Html.ActionLink("Criar Regra", "Regra/"+ Model.BaseID, "Especialista",new { @class = "btn btn-danger" })
+            </div>
+        }
+    </div>
+</div>
+

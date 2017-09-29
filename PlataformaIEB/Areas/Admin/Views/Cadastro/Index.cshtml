@@ -1,0 +1,25 @@
+﻿
+@{
+    ViewBag.Title = "Administrador";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="row text-center">
+    <div class="col-md-4">
+        <h2>Cadastrar/Consultar Médico</h2>
+        <p>Aqui você pode ver os médicos e adicionar</p>
+        <p>@Html.ActionLink("Médicos", "PrincipalMedico", "Cadastro", new { @class = "btn btn-default" })</p>
+    </div>
+    <div class="col-md-4">
+        <h2>Cadastrar/Consultar Paciente</h2>
+        <p>Quer ter os dados de suas consultas e compartilhar suas informações para pesquisa... </p>
+        <p>@Html.ActionLink("Pacientes", "PrincipalPaciente", "Cadastro", new { @class = "btn btn-default" })</p>
+    </div>
+    <div class="col-md-4">
+        <h2>Cadastrar/Consultar Exame</h2>
+        <p>Adicionar exames para facilitar a vida.</p>
+        <p>@Html.ActionLink("Exames", "PrincipalExame", "Cadastro", new { @class = "btn btn-default" })</p>
+    </div>
+</div>
+

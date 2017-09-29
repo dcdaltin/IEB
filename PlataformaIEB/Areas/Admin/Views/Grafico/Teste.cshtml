@@ -1,0 +1,15 @@
+﻿@{
+    ViewBag.Title = "Teste";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Teste</h2>
+
+<img src="@Url.Action("GrafTeste/"+ViewBag.id,"Relatorio")" alt="TEste" />
+
+
+@foreach (var item in ViewBag.teste)
+{
+    <p>@item.Nome</p>
+    <p>@item.Conf</p>
+} 
