@@ -1,0 +1,74 @@
+﻿@model PlataformaIEB.ViewModel.VMBase
+@{
+    ViewBag.Title = "Bases";
+    Layout = "~/Views/Shared/_LayoutPES.cshtml";
+}
+<head>
+    <meta name="viewport" content="width=device-width" />
+
+</head>
+<body>
+
+    <div class="row justify-content-center">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item active" aria-current="page">Base de Conhecimento</li>
+            </ol>
+        </nav>
+    </div>
+    <div class="container row">
+        <div class="col flex-sm-column">
+            <div class="card">
+                <div class="card-header"><h3>Bases de Conhecimento</h3></div>
+                <div class="card-body">
+                    <div class="list-group">
+                        @foreach (var item in Model.Bases)
+                        {
+                            <a class="list-group-item list-group-item-action" data-toggle="collapse" href="#@item.Nome" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                <h2>@item.Nome</h2>
+                            </a>
+                            <div class="collapse" id="@item.Nome">
+                                <div class="card card-body justify-content-center">
+                                    <nav class="nav flex-column">
+                                        @Html.ActionLink("Abrir", "Variavel/" + item.ID, "Especialista", new { area = "" }, new { @class = "nav-item nav-link" })
+                                        @Html.ActionLink("Apagar", "ExcluirBase/" + item.ID, "Especialista", new { area = "" }, new { @class = "nav-item nav-link" })
+                                    </nav>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col flex-lg-column">
+            <div class="jumbotron">
+                <h2>Nova Base</h2>
+                <p>Para adicionar uma nova Base, entre com um novo nome e pressione o botão Adicionar</p>
+                @using (Html.BeginForm())
+            {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(o => o.Usuario)
+                    @Html.ValidationSummary()
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Nome, new { @class = "control-label col-md-2" })
+                        <div class=" col-md-10">
+                            @Html.EditorFor(m => m.Nome, new { @class = "form-control" })
+                            <span class="help-block">
+                                @Html.ValidationMessageFor(m => m.Nome, "", new { @class = "text-danger" })
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10 justify-content-end">
+                            <input type="submit" value="Adicionar" class="btn btn-success" />
+                        </div>
+                    </div>
+
+                }
+
+            </div>
+        </div>
+    </div>
+
+</body>

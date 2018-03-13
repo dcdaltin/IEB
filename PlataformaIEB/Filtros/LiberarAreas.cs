@@ -10,36 +10,36 @@ namespace PlataformaIEB.Filtros
     public class LiberarAreas : ActionFilterAttribute
     {
 
-        DatabaseContext db = new DatabaseContext();
-        private string rota;
-        private string v;
+        BancoDeDados db = new BancoDeDados();
+        private int rota;
+        private int v;
 
-        public LiberarAreas(string v)
+        public LiberarAreas(int v)
         {
             this.v = v;
             
         }
 
-        public string ProcuraUsuario(string AutID)
+        public int ProcuraUsuario(string AutID)
         {
             if (db.Admins.Where(a => a.AutID == AutID).FirstOrDefault() != null)
             {
-                return "Admin";
+                return 4;
             }
             if (db.Medicos.Where(a => a.AutID == AutID).FirstOrDefault() != null)
             {
-                return "Medico";
+                return 3;
             }
             if (db.Pacientes.Where(a => a.AutID == AutID).FirstOrDefault() != null)
             {
-                return "Paciente";
+                return 1;
             }
             if (db.Pesquisadores.Where(a => a.AutID == AutID).FirstOrDefault() != null)
             {
-                return "Pesquisador";
+                return 2;
             }
 
-            return null;
+            return 0;
 
         }
 
@@ -49,14 +49,14 @@ namespace PlataformaIEB.Filtros
             try
             {
                 var request = filterContext.RequestContext.HttpContext.Request;
-                var sessao = filterContext.RequestContext.HttpContext.Session;
+                //var sessao = filterContext.RequestContext.HttpContext.Session;
 
                 var cookie = request.Cookies["TokkenCookie"].Value;
 
                 rota =  ProcuraUsuario(cookie);
 
 
-                if (rota != v)
+                if (rota < v)
                 {
                     filterContext.Result = new RedirectToRouteResult(new System.Web.Routing.RouteValueDictionary(new { area = "", controller = "Home", action = "Index" }));
                 }

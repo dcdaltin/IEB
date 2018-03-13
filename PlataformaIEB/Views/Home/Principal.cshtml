@@ -1,0 +1,27 @@
+﻿
+@{
+    ViewBag.Title = "Principal";
+}
+
+@switch (Request.Cookies["CookieTipo"].Value)
+{
+    case "ADMIN":
+        Layout = "~/Views/Shared/_LayoutADM.cshtml";
+        break;
+
+    case "Medico":
+        Layout = "~/Views/Shared/_LayoutMED.cshtml";
+        break;
+
+    case "Pesquisador":
+        Layout = "~/Views/Shared/_LayoutPES.cshtml";
+        break;
+
+    case "Paciente":
+        Layout = "~/Views/Shared/_LayoutPAC.cshtml";
+        break;
+}
+
+<h2>Principal</h2>
+
+@Html.ActionLink("Medico", "CadMedico", "Cadastro");

@@ -1,0 +1,46 @@
+﻿@model List<PlataformaIEB.Models.Medico>
+
+<div class="list-group pre-scrollable">
+    @foreach (var item in Model)
+    {
+        <a class="list-group-item list-group-item-action" data-toggle="collapse" href="#@item.Id" role="button" aria-expanded="false" aria-controls="collapseExample">
+            <h6>@item.Nome</h6>
+        </a>
+        <div class="collapse" id="@item.Id">
+            <div class="card card-body">
+                <nav class="nav flex-column">
+                    <a class="nav-item nav-link" href="#" data-toggle="modal" data-target="#@item.Nome">Detalhes</a>
+                    @Html.ActionLink("Excluir", "ExcluirCabeca/" + @item.Id, "Especialista", new { area = "" }, new { @class = "nav-item nav-link" })
+                </nav>
+            </div>
+        </div>
+        <div class="modal fade" id="@item.Nome" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Detalhes</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class=" col text-center">
+                            <h4>@item.Nome</h4>
+                            <div class="jumbotron lead">
+                                <p>@Html.LabelFor(a => item.Email): @item.Email</p>
+                                <p>@Html.LabelFor(a => item.Especialidade): @item.Especialidade</p>
+                                <p>@Html.LabelFor(a => item.Instituicao): @item.Instituicao</p>
+                                <p>@Html.LabelFor(a => item.Endereco): @item.Endereco</p>
+                                <p>@Html.LabelFor(a => item.CRM): @item.CRM</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+</div>

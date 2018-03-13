@@ -1,0 +1,24 @@
+﻿@model PlataformaIEB.ViewModel.VMTeste
+@{
+    Layout = "~/Views/Shared/_LayoutMED.cshtml";
+}
+
+@if (Model.Aplicadas.Count() > 0)
+{
+    <p class="alert-info">Encontramos as seguintes informações baseadas na consulta de @Model.Consulta.Paciente.Nome:</p>
+    foreach (var regra in Model.Aplicadas)
+    {
+        foreach (var entao in regra.Entao)
+        {
+            if (Model.Objetivos.Where(a=>a.ID == entao.VarID).Count() > 0)                
+            {
+                <p class="alert-warning">Objetivo:</p>
+            }
+            <div class="row">
+                <div class="col">
+                    @entao.Variavel.Nome é igua a @entao.Valor ;
+                </div>
+            </div>
+        }
+    }
+}

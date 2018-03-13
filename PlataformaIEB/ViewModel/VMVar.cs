@@ -14,10 +14,12 @@ namespace PlataformaIEB.ViewModel
 
         public List<Variavel> Variaveis { get; set; }
 
+        public List<string> Nomes { get; set; }
+
         [Display(Name = "Nome")]
         [Required(ErrorMessage = "A variável deve conter um nome")]
+        [UIHint("Autocomplete")]
         public string Nome { get; set; }
-
 
         [Display(Name = "Objetivo?")]
         public bool Obj { get; set; }

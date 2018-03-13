@@ -9,6 +9,7 @@ namespace PlataformaIEB.Migrations.Shell
     using System.Linq;
     using System.Reflection;
     using System.Text;
+    using System.Web.Helpers;
     using System.Xml;
 
     internal sealed class Configuration : DbMigrationsConfiguration<PlataformaIEB.Models.BancoDeDados>
@@ -18,6 +19,7 @@ namespace PlataformaIEB.Migrations.Shell
             AutomaticMigrationsEnabled = true;
             MigrationsDirectory = @"Migrations\Shell";
         }
+
 
         protected override void Seed(PlataformaIEB.Models.BancoDeDados context)
         {
@@ -35,20 +37,42 @@ namespace PlataformaIEB.Migrations.Shell
             //    );
             //
 
-            Assembly assembly = Assembly.GetExecutingAssembly();
-            string resourceName = "PlataformaIEB.CID10.CID10.xml";
-            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
-            {
-                using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
-                {
-                    XmlTextReader leitor = new XmlTextReader(reader);
-                    while (leitor.Read())
-                    {
-                        
-                    }
+            Admin admin = new Admin();
+            admin.Senha = Crypto.HashPassword("123");
+            admin.Email = "a@a.a";
+            admin.Nome = "Administrador";
+            context.Admins.Add(admin);
 
-                }
-            }
+
+            Medico medico = new Medico();
+            medico.CRM = 123;
+            medico.Email = "b@b.b";
+            medico.Nome = "Medco";
+            medico.Senha = Crypto.HashPassword("123");
+            medico.Especialidade = "Neuro";
+            medico.Endereco = "asdfad";
+            medico.Instituicao = " asdfsadfsadf";
+            context.Medicos.Add(medico);
+
+
+            Pesquisador pesquisa = new Pesquisador();
+            pesquisa.Email = "p@p.p";
+            pesquisa.Nome = "Loo";
+            pesquisa.Lattes = "http://www.dsdf.com";
+            pesquisa.Senha = Crypto.HashPassword("123");
+            context.Pesquisadores.Add(pesquisa);
+
+
+            Paciente paciente = new Paciente();
+            paciente.Nome = "Paciente";
+            paciente.Email = "c@c.c";
+            paciente.Senha = Crypto.HashPassword("123");
+            paciente.Nascimento = DateTime.Parse("11/02/2009").Date;
+            paciente.Responsavel = "João";
+            paciente.Sexo = "Masculino";
+            context.Pacientes.Add(paciente);
+
+            context.SaveChanges();
 
 
         }

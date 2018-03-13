@@ -13,10 +13,12 @@ namespace PlataformaIEB.ViewModel
 
         public int RegraID { get; set; }
 
-        [Required]
+        [Display(Name = "Variável")]
+        [Required(ErrorMessage = "Escolher uma variável")]
         public string Var { get; set; }
 
-        [Required]
+        [Display(Name = "Valor")]
+        [Required(ErrorMessage = "Escolher um valor")]
         public string Valor { get; set; }
 
         [Required]

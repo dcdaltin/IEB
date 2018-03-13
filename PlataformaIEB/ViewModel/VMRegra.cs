@@ -15,21 +15,24 @@ namespace PlataformaIEB.ViewModel
 
         public Regra Regra { get; set; }
 
+        [Display(Name = "Nome")]
         public string Nome { get; set; }
 
-        public List<string> Regras { get; set; }
+        public List<Regra> Regras { get; set; }
 
         public List<string> Operadores { get; set; }
 
-        [Required]
+        [Display(Name = "Variável")]
+        [Required(ErrorMessage = "Escolher uma variável")]
         public string VarID { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Escolher um operador")]
         public string Operador { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Adicionar um valor")]
         public string Valor { get; set; }
 
+        [Display(Name = "Negar?")]
         public bool Not { get; set; }
 
         public bool E { get; set; }
@@ -38,6 +41,7 @@ namespace PlataformaIEB.ViewModel
 
         public List<string> Variaveis { get; set; }
 
-
+        [Display(Name = "Conjunção")]
+        public bool Conjuncao { get; set; }
     }
 }

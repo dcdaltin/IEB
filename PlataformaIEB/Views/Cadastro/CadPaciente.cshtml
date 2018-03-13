@@ -1,0 +1,142 @@
+﻿@model PlataformaIEB.Models.Paciente
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+</head>
+
+<body>
+    @{
+        ViewBag.Title = "Cadastro de Pacientes";
+        switch (Request.Cookies["CookieTipo"].Value)
+        {
+            case "ADMIN":
+                Layout = "~/Views/Shared/_LayoutADM.cshtml";
+                break;
+
+            case "Medico":
+                Layout = "~/Views/Shared/_LayoutMED.cshtml";
+                break;
+
+            case "Pesquisador":
+                Layout = "~/Views/Shared/_LayoutPES.cshtml";
+                break;
+
+            case "Paciente":
+                Layout = "~/Views/Shared/_LayoutPAC.cshtml";
+                break;
+        }
+    }
+
+    @section Scripts{
+        <script>
+            $("#AddressChecklistFilter").keyup(function (e) {
+                $.ajax({
+                    url: '/Cadastro/PrincipalPaciente',
+                    data: { busca: $("#AddressChecklistFilter").val() },
+                    success: function (msg) {
+                        $("#Partial").html(msg);
+                    }
+                })
+            })
+
+        </script>
+
+        <script>
+            $('#myModal').on('shown.bs.modal', function () {
+                $('#myInput').trigger('focus')
+            })
+        </script>
+
+    }
+
+
+
+    <div class="container row">
+        <div class="col-sm">
+            <div class="card">
+                <div class="card-header"><h3>Pacientes</h3></div>
+                <div class="card-body">
+                    <div class="row justify-content-center">
+                        <input class="form-control" type="text" name="AddressChecklistFilter" id="AddressChecklistFilter" />
+                    </div>
+                    <br />
+                    <div id="Partial">@Html.Action("PrincipalPaciente")</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg">
+            <div class="jumbotron">
+                @using (Html.BeginForm())
+            {
+                    @Html.AntiForgeryToken()
+
+                    <div class="form-horizontal">
+                        <h4>Novo Profisional de Saúde</h4>
+                        <hr />
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Nome, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.Nome, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Nome, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Senha, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.Senha, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Senha, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Nascimento, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.Nascimento, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Nascimento, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Responsavel, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.Responsavel, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Responsavel, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Sexo, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.DropDownListFor(model => model.Sexo, new SelectList(ViewBag.Sexo), "Selecione uma opção", new { @class = "form-control" } )
+                                @Html.ValidationMessageFor(model => model.Sexo, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="row justify-content-end">
+                                <input type="submit" value="Adicionar" class="btn btn-primary" />
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

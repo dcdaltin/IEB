@@ -1,0 +1,135 @@
+﻿@model PlataformaIEB.ViewModel.VMEntao
+@{
+    ViewBag.Title = "Ações";
+    Layout = "~/Views/Shared/_LayoutPES.cshtml";
+}
+<div class="row justify-content-center">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">@Html.ActionLink("Bases de Conhecimento", "Base")</li>
+            <li class="breadcrumb-item">@Html.ActionLink("Variáveis", "Variavel/" + Model.Regra.Base.ID)</li>
+            <li class="breadcrumb-item">@Html.ActionLink("Regras", "Regra/" + Model.Regra.Base.ID)</li>
+            <li class="breadcrumb-item">@Html.ActionLink("Condições da Regra " + Model.Regra.Nome, "Cabeca/" + Model.Regra.ID)</li>
+            <li class="breadcrumb-item active" aria-current="page">Conclusões da regra @Model.Regra.Nome</li>
+        </ol>
+    </nav>
+</div>
+<div class="container row">
+
+    <div class="col-sm">
+        <div class="card">
+            <div class="card-header"><h3>@Html.ActionLink(Model.Regra.Nome, "Regra/" + Model.Regra.Base.ID, "Especialista", new { area = "" })</h3></div>
+            <div class="card-body">
+                <div class="list-group">
+                    <a class="list-group-item list-group-item-action" data-toggle="collapse" href="#se" role="button" aria-expanded="false" aria-controls="collapseExample">
+                        <h6>
+                            SE @Model.Regra.Se.Variavel.Nome @if (Model.Regra.Se.NOT)
+                            {
+                                <u>NÃO FOR</u>
+                            } @Model.Regra.Se.Operador @Model.Regra.Se.Valor
+                        </h6>
+                    </a>
+                    <div class="collapse" id="se">
+                        <div class="card card-body justify-content-center">
+                            <nav class="nav flex-column">
+                                @Html.ActionLink("Excluir Regra", "ExcluirRegra/" + Model.Regra.ID, "Especialista", new { area = "" }, new { @class = "nav-item nav-link" })
+                            </nav>
+                        </div>
+                    </div>
+                    @foreach (var item in Model.Regra.Conj.OrderBy(a => a.Pos))
+                    {
+                        <a class="list-group-item list-group-item-action" data-toggle="collapse" href="#@item.Pos" role="button" aria-expanded="false" aria-controls="collapseExample">
+                            <h6>
+                                @if (Model.Regra.Ou.Select(a => a.Cabeca.ID).Contains(item.Cabeca.ID))
+                                {
+                                    <u>OU</u>
+                                }
+                                else
+                                { <u>E</u>}
+                                @item.Cabeca.Variavel.Nome @if (item.Cabeca.NOT)
+                                {
+                                    <u>NÃO FOR</u>
+                                } @item.Cabeca.Operador @item.Cabeca.Valor
+                            </h6>
+                        </a>
+                        <div class="collapse" id="@item.Pos">
+                            <div class="card card-body justify-content-center">
+                                <nav class="nav flex-column">
+                                    @Html.ActionLink("Apagar", "ExcluirCabeca/" + @item.Cabeca.ID, "Especialista", new { area = "" }, new { @class = "nav-item nav-link" })
+                                </nav>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+
+            @if (Model.Regra.Entao.Count != 0)
+            {
+                <div class="card-header">ENTÃO</div>
+                <div class="card-body">
+                    <div class="list-group">
+                        @foreach (var item in Model.Regra.Entao)
+                        {
+                            <a class="list-group-item list-group-item-action" data-toggle="collapse" href="#@item.VarID" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                <h6>
+                                    @item.Variavel.Nome é igual a @item.Valor
+                                </h6>
+                            </a>
+                            <div class="collapse" id="@item.VarID">
+                                <div class="card card-body justify-content-center">
+                                    <nav class="nav flex-column">
+                                        @Html.ActionLink("Apagar", "ExcluirAcao/" + @item.RegraID + "-" + @item.VarID, "Especialista", new { area = "" }, new { @class = "nav-item nav-link" })
+                                    </nav>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="col-lg">
+        <div class="jumbotron">
+            <h2>Nova Ação</h2>
+            <p>Para adicionar uma nova Ação, selecione uma variável e atribua um valor. Pressione o botão Adicionar</p>
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary()
+                @Html.HiddenFor(a=>a.RegraID)
+
+
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Var, new { @class = "control-label col-md-2" })
+                    <div class=" col-md-10">
+                        @Html.DropDownListFor(m => m.Var, new SelectList(Model.Variaveis), "Variavel...", new { @class = "form-control" })
+                        <span class="help-block">
+                            @Html.ValidationMessageFor(m => m.Var, "", new { @class = "text-danger" })
+                        </span>
+                    </div>
+                </div>
+
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.Valor, new { @class = "control-label col-md-2" })
+                                            <div class=" col-md-10">
+                                                @Html.EditorFor(m => m.Valor, new { @class = "form-control" })
+                                                <span class="help-block">
+                                                    @Html.ValidationMessageFor(m => m.Valor, "", new { @class = "text-danger" })
+                                                </span>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="form-group">
+                                            <div class="col-md-offset-2 col-md-10 justify-content-end">
+                                                <input type="submit" value="Adicionar" class="btn btn-success" />
+                                            </div>
+                                        </div>
+
+
+            }
+        </div>
+    </div>
+</div>

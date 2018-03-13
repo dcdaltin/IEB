@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
   <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.3\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.3\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
   <Import Project="..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -159,112 +160,144 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
-    <Compile Include="Areas\Admin\Controllers\CadastroController.cs" />
-    <Compile Include="Areas\Admin\Controllers\GraficoController.cs" />
-    <Compile Include="Areas\Admin\Controllers\RelatorioController.cs" />
-    <Compile Include="Areas\Admin\Models\VMGrafico.cs" />
-    <Compile Include="Areas\Admin\Models\VMTriagem.cs" />
-    <Compile Include="Areas\RestritoPesquisador\RestritoPesquisadorAreaRegistration.cs" />
-    <Compile Include="Areas\RestritoMedico\Controllers\CadastroController.cs" />
-    <Compile Include="Areas\RestritoMedico\Models\VMTriagem.cs" />
-    <Compile Include="Areas\RestritoMedico\RestritoMedicoAreaRegistration.cs" />
-    <Compile Include="Areas\RestritoPaciente\RestritoPacienteAreaRegistration.cs" />
     <Compile Include="Controllers\AutenticarController.cs" />
+    <Compile Include="Controllers\CadastroController.cs" />
+    <Compile Include="Controllers\EspecialistaController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Areas\RestritoPesquisador\Controllers\EspecialistaController.cs" />
     <Compile Include="Filtros\Autorizacao.cs" />
     <Compile Include="Filtros\LiberarAreas.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\Plataforma\Configuration.cs" />
     <Compile Include="Migrations\Shell\Configuration.cs" />
-    <Compile Include="Models\DataBaseContext.cs" />
-    <Compile Include="Models\ExameGeral.cs" />
+    <Compile Include="Models\Shell\Agentes.cs" />
     <Compile Include="Models\Usuario.cs" />
-    <Compile Include="Shell\Back.cs" />
-    <Compile Include="Shell\BancoDeDados.cs" />
-    <Compile Include="Shell\BaseDeConhecimento.cs" />
-    <Compile Include="Shell\CID10.cs" />
-    <Compile Include="Shell\Motor.cs" />
-    <Compile Include="Shell\Regra.cs" />
-    <Compile Include="Shell\Variavel.cs" />
+    <Compile Include="Models\Shell\BancoDeDados.cs" />
+    <Compile Include="Models\Shell\BaseDeConhecimento.cs" />
+    <Compile Include="Models\Consulta.cs" />
+    <Compile Include="Models\Shell\Motor.cs" />
+    <Compile Include="Models\Shell\Regra.cs" />
+    <Compile Include="Models\Shell\Variavel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModel\VMBase.cs" />
+    <Compile Include="ViewModel\VMConsulta.cs" />
     <Compile Include="ViewModel\VMEntao.cs" />
     <Compile Include="ViewModel\VMEntrada.cs" />
     <Compile Include="ViewModel\VMLogin.cs" />
     <Compile Include="ViewModel\VMRegra.cs" />
+    <Compile Include="ViewModel\VMTeste.cs" />
     <Compile Include="ViewModel\VMVar.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="CID10\CID-O.xml" />
     <EmbeddedResource Include="CID10\CID10.xml" />
     <Content Include="CID10\Listas.xml" />
+    <Content Include="Content\bootstrap-grid.css" />
+    <Content Include="Content\bootstrap-grid.min.css" />
+    <Content Include="Content\bootstrap-reboot.css" />
+    <Content Include="Content\bootstrap-reboot.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\themes\base\accordion.css" />
+    <Content Include="Content\themes\base\all.css" />
+    <Content Include="Content\themes\base\autocomplete.css" />
+    <Content Include="Content\themes\base\base.css" />
+    <Content Include="Content\themes\base\button.css" />
+    <Content Include="Content\themes\base\core.css" />
+    <Content Include="Content\themes\base\datepicker.css" />
+    <Content Include="Content\themes\base\dialog.css" />
+    <Content Include="Content\themes\base\draggable.css" />
+    <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="Content\themes\base\images\ui-icons_222222_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_444444_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_454545_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_555555_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_777620_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_777777_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_888888_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_cc0000_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_ffffff_256x240.png" />
+    <Content Include="Content\themes\base\jquery-ui.css" />
+    <Content Include="Content\themes\base\jquery-ui.min.css" />
+    <Content Include="Content\themes\base\menu.css" />
+    <Content Include="Content\themes\base\progressbar.css" />
+    <Content Include="Content\themes\base\resizable.css" />
+    <Content Include="Content\themes\base\selectable.css" />
+    <Content Include="Content\themes\base\selectmenu.css" />
+    <Content Include="Content\themes\base\slider.css" />
+    <Content Include="Content\themes\base\sortable.css" />
+    <Content Include="Content\themes\base\spinner.css" />
+    <Content Include="Content\themes\base\tabs.css" />
+    <Content Include="Content\themes\base\theme.css" />
+    <Content Include="Content\themes\base\tooltip.css" />
     <Content Include="favicon.ico" />
-    <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="Scripts\bootstrap.js" />
-    <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Areas\RestritoMedico\Views\web.config" />
-    <Content Include="Areas\RestritoPaciente\Views\web.config" />
-    <Content Include="Areas\Admin\Views\web.config" />
-    <Content Include="Areas\Admin\Views\Shared\_Layout.cshtml" />
-    <Content Include="Areas\Admin\Views\Cadastro\Index.cshtml" />
-    <Content Include="Areas\Admin\Views\Cadastro\PrincipalMedico.cshtml" />
-    <Content Include="Areas\Admin\Views\Cadastro\CadMedico.cshtml" />
-    <Content Include="Areas\Admin\Views\Cadastro\_FormMedico.cshtml" />
-    <Content Include="Areas\Admin\Views\Cadastro\EditMedico.cshtml" />
-    <Content Include="Areas\Admin\Views\Cadastro\PrincipalPaciente.cshtml" />
-    <Content Include="Areas\Admin\Views\Cadastro\CadPaciente.cshtml" />
-    <Content Include="Areas\Admin\Views\Cadastro\_FormPaciente.cshtml" />
-    <Content Include="Areas\Admin\Views\Cadastro\EditPaciente.cshtml" />
-    <Content Include="Areas\Admin\Views\Cadastro\PrincipalExame.cshtml" />
-    <Content Include="Areas\RestritoPesquisador\Views\web.config" />
-    <Content Include="Areas\Admin\Views\Cadastro\CadTriagem.cshtml" />
-    <Content Include="Areas\Admin\Views\Cadastro\Clinico.cshtml" />
-    <Content Include="Areas\Admin\Views\Cadastro\_MascClinico.cshtml" />
-    <Content Include="Areas\Admin\Views\Cadastro\_FemClinico.cshtml" />
-    <Content Include="Areas\Admin\Views\Cadastro\Imagem.cshtml" />
-    <Content Include="Areas\Admin\Views\Cadastro\_FemImagem.cshtml" />
-    <Content Include="Areas\Admin\Views\Cadastro\Lab.cshtml" />
-    <Content Include="Areas\Admin\Views\Cadastro\Diagnostico.cshtml" />
-    <Content Include="Areas\Admin\Views\Grafico\Grafico.cshtml" />
-    <Content Include="Areas\Admin\Views\Grafico\Teste.cshtml" />
-    <Content Include="Areas\RestritoMedico\Views\Shared\_Layout.cshtml" />
-    <Content Include="Areas\RestritoMedico\Views\Cadastro\Index.cshtml" />
-    <Content Include="Areas\RestritoMedico\Views\Cadastro\_CadTriagem.cshtml" />
-    <Content Include="Areas\RestritoMedico\Views\Cadastro\_IndicarExame.cshtml" />
-    <Content Include="Areas\RestritoPesquisador\Views\Shared\_Layout.cshtml" />
-    <EmbeddedResource Include="CID10\CID-10-CAPITULOS.CSV" />
-    <EmbeddedResource Include="CID10\CID-10-CATEGORIAS.CSV" />
-    <EmbeddedResource Include="CID10\CID-10-GRUPOS.CSV" />
-    <EmbeddedResource Include="CID10\CID-10-SUBCATEGORIAS.CSV" />
-    <EmbeddedResource Include="CID10\CID-O-CATEGORIAS.CSV" />
-    <EmbeddedResource Include="CID10\CID-O-GRUPOS.CSV" />
     <Content Include="CID10\CID-O.dtd" />
     <Content Include="CID10\CID10.dtd" />
     <Content Include="CID10\Listas.dtd" />
+    <Content Include="Content\bootstrap.min.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\bootstrap-reboot.min.css.map" />
+    <Content Include="Content\bootstrap-reboot.css.map" />
+    <Content Include="Content\bootstrap-grid.min.css.map" />
+    <Content Include="Content\bootstrap-grid.css.map" />
+    <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <None Include="Properties\PublishProfiles\puberdade - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\puberdade - Web Deploy.pubxml" />
-    <None Include="Scripts\jquery-1.10.2.intellisense.js" />
-    <Content Include="Scripts\jquery-1.10.2.js" />
-    <Content Include="Scripts\jquery-1.10.2.min.js" />
+    <Content Include="Scripts\bootstrap.bundle.js" />
+    <Content Include="Scripts\bootstrap.bundle.min.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\esm\popper-utils.js" />
+    <Content Include="Scripts\esm\popper-utils.min.js" />
+    <Content Include="Scripts\esm\popper.js" />
+    <Content Include="Scripts\esm\popper.min.js" />
+    <Content Include="Scripts\esm\popper.min.js.map" />
+    <Content Include="Scripts\esm\popper.js.map" />
+    <Content Include="Scripts\esm\popper-utils.min.js.map" />
+    <Content Include="Scripts\esm\popper-utils.js.map" />
+    <Content Include="Scripts\bootstrap.min.js.map" />
+    <Content Include="Scripts\bootstrap.js.map" />
+    <Content Include="Scripts\bootstrap.bundle.min.js.map" />
+    <Content Include="Scripts\bootstrap.bundle.js.map" />
+    <None Include="Scripts\jquery-3.0.0-vsdoc.js" />
+    <Content Include="Scripts\jquery-3.0.0.js" />
+    <Content Include="Scripts\jquery-3.0.0.min.js" />
+    <Content Include="Scripts\jquery-3.0.0.slim.js" />
+    <Content Include="Scripts\jquery-3.0.0.slim.min.js" />
+    <Content Include="Scripts\jquery-3.0.0.slim.min.map" />
+    <Content Include="Scripts\jquery-3.0.0.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery-ui-1.12.1.js" />
+    <Content Include="Scripts\jquery-ui-1.12.1.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\popper-utils.js" />
+    <Content Include="Scripts\popper-utils.min.js" />
+    <Content Include="Scripts\popper.js" />
+    <Content Include="Scripts\popper.min.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\umd\popper-utils.js" />
+    <Content Include="Scripts\umd\popper-utils.min.js" />
+    <Content Include="Scripts\umd\popper.js" />
+    <Content Include="Scripts\umd\popper.min.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -282,43 +315,59 @@
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Autenticar\Login.cshtml" />
-    <Content Include="Areas\RestritoPesquisador\Views\Especialista\Base.cshtml" />
-    <Content Include="Areas\RestritoPesquisador\Views\Especialista\Variavel.cshtml" />
-    <Content Include="Areas\RestritoPesquisador\Views\Especialista\Regra.cshtml" />
-    <Content Include="Areas\RestritoPesquisador\Views\Especialista\Cabeca.cshtml" />
-    <Content Include="Areas\RestritoPesquisador\Views\Especialista\Entao.cshtml" />
-    <Content Include="Areas\RestritoPesquisador\Views\Especialista\Entrada.cshtml" />
     <Content Include="Views\Autenticar\Cadastrar.cshtml" />
+    <Content Include="Views\Shared\_LayoutADM.cshtml" />
+    <Content Include="Scripts\umd\popper.min.js.map" />
+    <Content Include="Scripts\umd\popper.js.map" />
+    <Content Include="Scripts\umd\popper-utils.min.js.map" />
+    <Content Include="Scripts\umd\popper-utils.js.map" />
+    <Content Include="Scripts\README.md" />
+    <Content Include="Scripts\popper.min.js.map" />
+    <Content Include="Scripts\popper.js.map" />
+    <Content Include="Scripts\popper-utils.min.js.map" />
+    <Content Include="Scripts\popper-utils.js.map" />
+    <Content Include="Views\Shared\_LayoutMED.cshtml" />
+    <Content Include="Views\Shared\_LayoutPAC.cshtml" />
+    <Content Include="Views\Shared\_LayoutPES.cshtml" />
+    <Content Include="Views\Home\Principal.cshtml" />
+    <Content Include="Views\Especialista\Base.cshtml" />
+    <Content Include="Views\Especialista\Cabeca.cshtml" />
+    <Content Include="Views\Especialista\EditorTemplates\ListaValores.cshtml" />
+    <Content Include="Views\Especialista\EditorTemplates\Variavel.cshtml" />
+    <Content Include="Views\Especialista\Entao.cshtml" />
+    <Content Include="Views\Especialista\Entrada.cshtml" />
+    <Content Include="Views\Especialista\Regra.cshtml" />
+    <Content Include="Views\Especialista\Variavel.cshtml" />
+    <Content Include="Views\Cadastro\PrincipalPaciente.cshtml" />
+    <Content Include="Views\Cadastro\EditMedico.cshtml" />
+    <Content Include="Views\Cadastro\EditPaciente.cshtml" />
+    <Content Include="Views\Cadastro\Index.cshtml" />
+    <Content Include="Views\Cadastro\PrincipalMedico.cshtml" />
+    <Content Include="Views\Cadastro\CadMedico.cshtml" />
+    <Content Include="Views\Cadastro\CadPaciente.cshtml" />
+    <Content Include="Views\Cadastro\CadConsulta.cshtml" />
+    <Content Include="Views\Cadastro\EditorTemplates\ListaValores.cshtml" />
+    <Content Include="Views\Cadastro\EditorTemplates\Variavel.cshtml" />
+    <Content Include="Views\Cadastro\Teste.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Areas\Admin\Views\Relatorio\" />
-    <Folder Include="Areas\RestritoPaciente\Controllers\" />
-    <Folder Include="Areas\RestritoPaciente\Models\" />
-    <Folder Include="Areas\RestritoPaciente\Views\Shared\" />
-    <Folder Include="Areas\RestritoPesquisador\Models\" />
-    <Folder Include="Views\Usuarios\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="fonts\glyphicons-halflings-regular.woff" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="fonts\glyphicons-halflings-regular.eot" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\jquery-1.10.2.min.map" />
+    <TypeScriptCompile Include="Scripts\index.d.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
   <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">

@@ -1,0 +1,150 @@
+﻿@model PlataformaIEB.Models.Medico
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+
+</head>
+
+@{
+    ViewBag.Title = "Cadastro de Médicos";
+    switch (Request.Cookies["CookieTipo"].Value)
+    {
+        case "ADMIN":
+            Layout = "~/Views/Shared/_LayoutADM.cshtml";
+            break;
+
+        case "Medico":
+            Layout = "~/Views/Shared/_LayoutMED.cshtml";
+            break;
+
+        case "Pesquisador":
+            Layout = "~/Views/Shared/_LayoutPES.cshtml";
+            break;
+
+        case "Paciente":
+            Layout = "~/Views/Shared/_LayoutPAC.cshtml";
+            break;
+    }
+}
+
+@section Scripts{
+    <script>
+        $("#AddressChecklistFilter").keyup(function (e) {
+            $.ajax({
+                url: '/Cadastro/PrincipalMedico',
+                data: { busca: $("#AddressChecklistFilter").val() },
+                success: function (msg) {
+                    $("#Partial").html(msg);
+                }
+            })
+        })
+
+    </script>
+
+    <script>
+        $('#myModal').on('shown.bs.modal', function () {
+            $('#myInput').trigger('focus')
+        })
+    </script>
+
+}
+
+
+
+<div class="container row">
+    <div class="col-sm">
+        <div class="card">
+            <div class="card-header"><h3>Profissionais de Saúde</h3></div>
+            <div class="card-body">
+                <div class="row justify-content-center">
+                    <input class="form-control" type="text" name="AddressChecklistFilter" id="AddressChecklistFilter" />
+                </div>            
+                <br /> 
+                <div id="Partial">@Html.Action("PrincipalMedico")</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg">
+        <div class="jumbotron">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-horizontal">
+                    <h4>Novo Profisional de Saúde</h4>
+                    <hr />
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Nome, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Nome, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Nome, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Senha, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Senha, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Senha, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.CRM, htmlAttributes: new { @class = "control-label col-md-10" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.CRM, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.CRM, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Instituicao, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Instituicao, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Instituicao, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Endereco, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Endereco, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Endereco, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Especialidade, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Especialidade, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Especialidade, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="row justify-content-end">
+                            <input type="submit" value="Adicionar" class="btn btn-primary" />
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+
+
+
+</div>
+
+
+

@@ -1,0 +1,105 @@
+﻿@model PlataformaIEB.ViewModel.VMVar
+@{
+    ViewBag.Title = "Variáveis";
+    Layout = "~/Views/Shared/_LayoutPES.cshtml";
+}
+
+<link href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-1.12.4.js"></script>
+<script src="~/Scripts/jquery-ui-1.12.1.js"></script>
+@section scripts {
+
+    <script>
+    $(function () {
+        $("#nome").autocomplete({
+            source: '@Url.Action("ListaNomes")',
+            minLength: 4,
+            autoFocus: true
+        });
+    });
+    </script>
+}
+
+<div class="row justify-content-center">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">@Html.ActionLink("Bases de Conhecimento", "Base")</li>
+            <li class="breadcrumb-item active" aria-current="page">Variáveis</li>
+        </ol>
+    </nav>
+</div>
+<div class="container row">
+
+    <div class="col flex-sm-column">
+        <div class="card">
+            <div class="card-header"><h3>Variáveis de @ViewBag.Base</h3></div>
+            <div class="card-body">
+                <small>Objetivos em destaque</small>
+                <div class="list-group">
+                    @foreach (var item in Model.Variaveis)
+                    {
+                        if (item.Base.Where(a => (a.Base.ID == Model.BaseID)).Select(o => o.Objetivo).SingleOrDefault())
+                        {
+                            <a class="list-group-item list-group-item-action list-group-item-info" data-toggle="collapse" href="#@item.Nome" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                <h4>@item.Nome</h4>
+                            </a>
+                        }
+                        else
+                        {
+                            <a class="list-group-item list-group-item-action" data-toggle="collapse" href="#@item.Nome" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                <h4>@item.Nome</h4>
+                            </a>
+                        }
+                        <div class="collapse" id="@item.Nome">
+                            <div class="card card-body justify-content-center">
+                                <nav class="nav flex-column ">
+                                    @Html.ActionLink("Apagar", "ExcluirVar/" + item.ID, "Especialista", new { area = "" }, new { @class = "nav-item nav-link" })
+                                </nav>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col flex-lg-column">
+        <div class="jumbotron">
+            <h2>Nova Variável</h2>
+            <p>Para adicionar uma nova Variável, entre com um novo nome e pressione o botão Adicionar</p>
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(o => o.BaseID)
+                @Html.ValidationSummary()
+
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Nome, new { @class = "control-label col-md-2" })
+                    <div class=" col-md-10">
+                        @Html.TextBoxFor(m => m.Nome, new { id="nome", @class = "form-control" })
+                        <span class="help-block">
+                            @Html.ValidationMessageFor(m => m.Nome, "", new { @class = "text-danger" })
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Obj, new { @class = "control-label col-md-2" })
+                    <div class=" col-md-10">
+                        @Html.EditorFor(m => m.Obj, new { @class = "form-control" })
+                        <span class="help-block">
+                            @Html.ValidationMessageFor(m => m.Nome, "", new { @class = "text-danger" })
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Adicionar" class="btn btn-success" />
+                    </div>
+                </div>
+            }
+            <div class="row justify-content-end">
+                @Html.ActionLink("Criar Regra", "Regra/" + Model.BaseID, "Especialista", new { @class = "btn btn-danger" })
+            </div>
+        </div>
+    </div>
+</div>

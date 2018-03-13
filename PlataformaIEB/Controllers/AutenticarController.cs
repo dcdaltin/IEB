@@ -12,16 +12,16 @@ namespace PlataformaIEB.Controllers
     public class AutenticarController : Controller
     {
         
-        DatabaseContext db = new DatabaseContext();
+        BancoDeDados db = new BancoDeDados();
 
         public ActionResult Login()
         {
             VMLogin login = new VMLogin();
-            return View(login);
+            return View("Login",login);
 
         }
 
-        public bool VerificaSenha(VMLogin login, Usuario usuario)
+        private bool VerificaSenha(VMLogin login, Usuario usuario)
         {
             if (!Crypto.VerifyHashedPassword(usuario.Senha, login.Senha))
             {
@@ -31,112 +31,76 @@ namespace PlataformaIEB.Controllers
             //Gera Aleatório Cadastro Usuario (TOkken)
             string autoriza = Guid.NewGuid().ToString();
 
+            //Salva Tokken no Banco
+            usuario.AutID = autoriza;
+            db.SaveChanges();
+
             //Cria Cookie da identificação
             var CookieTokken = new HttpCookie("TokkenCookie");
-
             CookieTokken.Expires = DateTime.Now.AddDays(1);
-
             CookieTokken.Value = autoriza;
-
             Response.Cookies.Add(CookieTokken);
+            Session["Tokken"] = CookieTokken;
 
-            Session["TokkenNome"] = CookieTokken;
+            //Cria Cookie de nome de Usuário
+            var CookieNome = new HttpCookie("CookieNome");
+            CookieNome.Expires = DateTime.Now.AddDays(1);
+            CookieNome.Value = usuario.Nome;
+            Response.Cookies.Add(CookieNome);
+            Session["Tokken"] = CookieNome;
 
-            usuario.AutID = autoriza;
 
-            db.SaveChanges();
+            //Cria Cookie de tipo de Usuário
+            var CookieTipo = new HttpCookie("CookieTipo");
+            CookieTipo.Expires = DateTime.Now.AddDays(1);
+            CookieTipo.Value = ProcuraUsuario(autoriza).ToString();
+            Response.Cookies.Add(CookieTipo);
+            Session["Tokken"] = CookieTipo;
 
             return true;
         }
 
-        public Usuario ProcuraUsuario(string AutID)
+
+        private Tipo ProcuraUsuario(string AutID)
         {
             if (db.Medicos.Where(b => b.AutID == AutID).FirstOrDefault() != null)
             {
-                Usuario usuario = db.Medicos.Where(b => b.AutID == AutID).FirstOrDefault();
-                return usuario;
+                return Tipo.Medico;
             }
             if (db.Admins.Where(a => a.AutID == AutID).FirstOrDefault() != null)
             {
-                Usuario usuario = db.Admins.Where(a => a.AutID == AutID).FirstOrDefault();
-                return usuario;
+                return Tipo.ADMIN;
             }
             if (db.Pacientes.Where(c => c.AutID == AutID).FirstOrDefault() != null)
             {
-                Usuario usuario = db.Pacientes.Where(c => c.AutID == AutID).FirstOrDefault();
-                return usuario;
+                return Tipo.Paciente;
             }
             if (db.Pesquisadores.Where(c => c.AutID == AutID).FirstOrDefault() != null)
             {
-                Usuario usuario = db.Pesquisadores.Where(c => c.AutID == AutID).FirstOrDefault();
-                return usuario;
+                return Tipo.Pesquisador;
             }
-            RedirectToAction("Login","Autenticar");
-            return null;
+
+            return Tipo.Paciente;
         }
+
+        public enum Tipo { Pesquisador, Medico, Paciente, ADMIN}
 
         [HttpPost]
         public ActionResult Login(VMLogin login)
         {
             if (ModelState.IsValid)
             {
-                if (db.Admins.Where( a =>  a.Email == login.Email).SingleOrDefault() != null)
-                {
-                    Admin usuario = db.Admins.Where(a => login.Email == a.Email).SingleOrDefault();
-                    if (!VerificaSenha(login, usuario))
-                    {
-                        ModelState.AddModelError("", "Senha Errada");
-                        return View(login);
-                    }
-                    
-                    return RedirectToAction("Index", "Cadastro", new { area = "Admin"});
-                        
-                }
-                else 
-                if (db.Medicos.Where(a => login.Email == a.Email).FirstOrDefault() != null)
-                {
-                    Medico usuario = db.Medicos.Where(a => login.Email == a.Email).FirstOrDefault();
-                    if (!VerificaSenha(login, usuario))
-                    {
-                        ModelState.AddModelError("", "Senha Errada");
-                        return View(login);
-                    }
+                Usuario usuario = db.Usuarios.Where(a => login.Email == a.Email).SingleOrDefault();
 
-                    return RedirectToAction("Index", "Home");
-                }
-                else 
-                if (db.Pacientes.Where(a => login.Email == a.Email).FirstOrDefault() != null)
+                if (VerificaSenha(login, usuario))
                 {
-                    Paciente usuario = db.Pacientes.Where(a => login.Email == a.Email).FirstOrDefault();
-                    if (!VerificaSenha(login, usuario))
-                    {
-                        ModelState.AddModelError("", "Senha Errada");
-                        return View(login);
-                    }
-                    ViewBag.Sucesso = true;
-                    ViewBag.Nome = usuario.Nome;
-                    return RedirectToAction("Index", "Home");
-                }
-                if (db.Pesquisadores.Where(a => login.Email == a.Email).FirstOrDefault() != null)
-                {
-                    Pesquisador usuario = db.Pesquisadores.Where(a => login.Email == a.Email).FirstOrDefault();
-                    if (!VerificaSenha(login, usuario))
-                    {
-                        ModelState.AddModelError("", "Senha Errada");
-                        return View(login);
-                    }
-                    ViewBag.Sucesso = true;
-                    ViewBag.Nome = usuario.Nome;
-                    return RedirectToAction("Base", "Especialista", new { area="RestritoPesquisador"});
-                }
-                else
-                {
-                    ViewBag.Sucesso = "Usuário Não Encontrado! Favor entrar em contato";
-                    ModelState.AddModelError("", "Usuário Não Encontrado!Favor entrar em contato");
-                    return View(login);
+                    return RedirectToAction("Principal", "Home", new { area = "" });
                 }
 
+                ModelState.AddModelError("", "Falha no Login! Favor entrar em contato");
+                return View(login);
             }
+
             ModelState.AddModelError("", "Falha no Login! Favor entrar em contato");
             return View(login);
 
@@ -147,7 +111,7 @@ namespace PlataformaIEB.Controllers
             if (Request.Cookies.AllKeys.Contains("TokkenCookie"))
             {
                 String AutID = Request.Cookies["TokkenCookie"].Value;
-                Usuario usuario = ProcuraUsuario(AutID);
+                Usuario usuario = db.Usuarios.Where(a=>a.AutID == AutID).SingleOrDefault();
                 if(usuario != null)
                 {
                     usuario.AutID = null;
@@ -156,8 +120,15 @@ namespace PlataformaIEB.Controllers
 
                 Request.Cookies["TokkenCookie"].Value = "";
                 Request.Cookies["TokkenCookie"].Expires = DateTime.Now;
-
                 Response.SetCookie(Request.Cookies["TokkenCookie"]);
+
+                Request.Cookies["CookieNome"].Value = "";
+                Request.Cookies["CookieNome"].Expires = DateTime.Now;
+                Response.SetCookie(Request.Cookies["CookieNome"]);
+
+                Request.Cookies["CookieTipo"].Value = "";
+                Request.Cookies["CookieTipo"].Expires = DateTime.Now;
+                Response.SetCookie(Request.Cookies["CookieTipo"]);
 
             }
 

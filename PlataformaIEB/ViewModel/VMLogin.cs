@@ -18,5 +18,6 @@ namespace PlataformaIEB.ViewModel
         [DataType(DataType.Password)]
         public String Senha { get; set; }
 
+
     }
 }
