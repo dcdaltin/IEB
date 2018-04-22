@@ -22,6 +22,9 @@
         break;
 }
 
-<h2>Principal</h2>
-
-@Html.ActionLink("Medico", "CadMedico", "Cadastro");
+<div class="jumbotron">
+    <h1>Olá @Response.Cookies["CookieNome"].Value</h1>
+    <p class="lead">
+        Sua participação é muito importante! 
+    <p><a href="http://www.ieb.ufsc.br" class="btn btn-primary btn-lg">Saiba mais sobre o IEB-UFSC &raquo;</a></p>
+</div>

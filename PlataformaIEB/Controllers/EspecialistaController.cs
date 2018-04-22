@@ -152,14 +152,15 @@ namespace PlataformaIEB.Controllers
             return Lista;
         }
 
-        public JsonResult ListaNomes(string term)
+        
+        public ICollection<string> ListaNomes(string term)
         {
             List<string> Nomes = new List<string>();
             Nomes.AddRange(dbSE.Variaveis.Select(o => o.Nome).Where(a=>a.ToLower().Contains(term.ToLower())));
             Nomes.AddRange(CID(term).Where(a => (Nomes.Count(b=> b==a ) < 1)));            
             //Nomes.RemoveAll(a => Nomes.Count(b => b == a) > 2);
             //Nomes = Nomes.Where(o=>o.ToUpper().Contains(term.ToUpper())).ToList();
-            return Json(Nomes, JsonRequestBehavior.AllowGet);
+            return Nomes;
         }
 
         [HttpGet]

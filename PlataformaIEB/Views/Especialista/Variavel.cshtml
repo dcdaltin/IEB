@@ -4,19 +4,25 @@
     Layout = "~/Views/Shared/_LayoutPES.cshtml";
 }
 
-<link href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
-<script src="~/Scripts/jquery-1.12.4.js"></script>
-<script src="~/Scripts/jquery-ui-1.12.1.js"></script>
 @section scripts {
 
     <script>
-    $(function () {
-        $("#nome").autocomplete({
-            source: '@Url.Action("ListaNomes")',
-            minLength: 4,
-            autoFocus: true
-        });
-    });
+        $("#nome").keyup(function (e) {
+            $.ajax({
+                type: 'GET',
+                
+                url: '/Especialista/ListaNomes',
+                data: { term: $("#nome").val() },
+                success: function (a) {
+                    $("#nome").autocomplete({
+                        source: a,
+                        minLength: 4,
+                        autoFocus: true
+                    });
+                }
+            })
+        })
+
     </script>
 }
 
@@ -76,7 +82,7 @@
                 <div class="form-group">
                     @Html.LabelFor(m => m.Nome, new { @class = "control-label col-md-2" })
                     <div class=" col-md-10">
-                        @Html.TextBoxFor(m => m.Nome, new { id="nome", @class = "form-control" })
+                        @Html.TextBoxFor(m => m.Nome, new { id = "nome", @class = "form-control" })
                         <span class="help-block">
                             @Html.ValidationMessageFor(m => m.Nome, "", new { @class = "text-danger" })
                         </span>
