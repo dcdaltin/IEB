@@ -23,5 +23,6 @@ namespace PlataformaIEB.ViewModel
 
         [Display(Name = "Objetivo?")]
         public bool Obj { get; set; }
+
     }
 }

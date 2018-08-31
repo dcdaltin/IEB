@@ -14,7 +14,7 @@ namespace PlataformaIEB.Models
 
         public ICollection<Regra> Aplicadas { get; set; }
 
-        private static List<Cabecario> Cabecas { get; set; }
+        private static List<Tuple<Cabecario,double>> Cabecas { get; set; }
 
         private static ICollection<Agente> Agentes { get; set; }
 
@@ -25,7 +25,7 @@ namespace PlataformaIEB.Models
         public Buscador(Consulta Cons)
         {
             Consulta = Cons;
-            Cabecas = new List<Cabecario>();
+            Cabecas = new List<Tuple<Cabecario,double>>();
             Aplicadas = new List<Regra>();
             Agentes = new List<Agente>();
         }
@@ -82,18 +82,21 @@ namespace PlataformaIEB.Models
         {
             BancoDeDados db = new BancoDeDados();
 
-            Regra = db.Regras.Where(a => a.ID == Regra.ID).SingleOrDefault();            
+            Regra = db.Regras.Where(a => a.ID == Regra.ID).SingleOrDefault();
 
-            bool resultado = Cabecas.Select(a=>a.ID).Contains(Regra.Se.ID);
-            int cont, cont1, cont2;
-            cont1 = Regra.E.Count;
-            cont2 = Regra.Ou.Count;
-            cont = cont1 + cont2;
+            
+            double confianca = 1;
+
+            bool resultado = Cabecas.Select(a=>a.Item1.ID).Contains(Regra.Se.ID);
+
+            if (resultado) confianca = Cabecas.Where(a => a.Item1.ID == Regra.Se.ID).SingleOrDefault().Item2;
+
+            var cont = Regra.E.Count + Regra.Ou.Count;
 
             if (cont == 0)
                 if (resultado)
                 {
-                    Aplicar(Regra);
+                    Aplicar(Regra, confianca);
                     return;
                 }
                 else return; ;           
@@ -104,7 +107,8 @@ namespace PlataformaIEB.Models
                 try
                 {
                     var temp = Regra.E.Where(a => a.Pos == i).SingleOrDefault();
-                    resultado = resultado && Cabecas.Contains(temp.Cabeca);
+                    resultado = resultado && Cabecas.Select(a => a.Item1.ID).Contains(temp.Cabeca.ID);
+                    if (resultado) confianca *= Cabecas.Where(a => a.Item1.ID == temp.Cabeca.ID).SingleOrDefault().Item2;
                 }
                 catch (Exception)
                 {
@@ -114,7 +118,10 @@ namespace PlataformaIEB.Models
                 try
                 {
                     var temp = Regra.Ou.Where(a => a.Pos == i).SingleOrDefault();
-                    resultado = resultado || Cabecas.Contains(temp.Cabeca);
+                    resultado = resultado || Cabecas.Select(a => a.Item1.ID).Contains(temp.Cabeca.ID);
+                    var aux = Cabecas.Where(a => a.Item1.ID == temp.Cabeca.ID).SingleOrDefault().Item2;
+                    if (resultado) confianca = (confianca + aux) - (confianca * aux);
+
                 }
                 catch (Exception)
                 {
@@ -124,25 +131,25 @@ namespace PlataformaIEB.Models
 
             if (resultado)
             {
-                Aplicar(Regra);
+                Aplicar(Regra,confianca);
             }
 
         }
 
-        private void Aplicar(Regra Regra)
+        private void Aplicar(Regra Regra, double confianca)
         {
             lock (this)
             {
                 Aplicadas.Add(Regra);
                 flag = true;
             }
-            Parallel.ForEach(Regra.Entao, a => AplicaAção(a));
+            Parallel.ForEach(Regra.Entao, a => AplicaAção(a,confianca));
 
         }
 
-        private void AplicaAção(Acao Acao)
+        private void AplicaAção(Acao Acao, double confianca)
         {
-            ListaValores Nova = new ListaValores { VariavelID = Acao.Variavel.ID, Variavel=Acao.Variavel, Valor = Acao.Valor };
+            ListaValores Nova = new ListaValores { VariavelID = Acao.Variavel.ID, Variavel=Acao.Variavel, Valor = Acao.Valor, Confianca = confianca };
             NovoAgente(Nova);
         }
 
@@ -185,10 +192,11 @@ namespace PlataformaIEB.Models
             return resultado;
         }
 
-        public ICollection<Cabecario> ProcuraCabeca()
+        public ICollection<Tuple<Cabecario,double>> ProcuraCabeca()
         {
             List<Cabecario> Cabecas = new List<Cabecario>();
             ICollection<Cabecario> Excluir = new List<Cabecario>();
+            ICollection<Tuple<Cabecario, double>> resultado = new List<Tuple<Cabecario, double>>();
             using (BancoDeDados db = new BancoDeDados())
             {
                 Cabecas.AddRange(db.Cabecarios.Where(a => a.Variavel.ID == Valor.VariavelID).ToList());                
@@ -203,7 +211,10 @@ namespace PlataformaIEB.Models
             });
 
             Cabecas.RemoveAll(a=>Excluir.Select(o=>o.ID).Contains(a.ID));
-            return Cabecas;
+
+            Cabecas.ForEach(a => resultado.Add(new Tuple<Cabecario, double>(a, Valor.Confianca)));
+
+            return resultado;
         }
 
 

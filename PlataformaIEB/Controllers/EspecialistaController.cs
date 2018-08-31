@@ -129,8 +129,8 @@ namespace PlataformaIEB.Controllers
         public List<string> CID(string termo)
         {
             List<string> Lista = new List<string>();
-            string C10 = @"C:\Users\dcdal\Documents\Visual Studio 2017\Projects\PlataformaIEB\PlataformaIEB\CID10\CID10.xml";
-            string C0 = @"C:\Users\dcdal\Documents\Visual Studio 2017\Projects\PlataformaIEB\PlataformaIEB\CID10\CID-O.xml";
+            string C10 = @"C:\PlataformaIEB\CID10\CID10.xml";
+            string C0 = @"C:\PlataformaIEB\CID10\CID-O.xml";
             XmlDocument doc = new XmlDocument();
             doc.XmlResolver = new XmlUrlResolver();
             doc.Load(C10);
@@ -152,15 +152,14 @@ namespace PlataformaIEB.Controllers
             return Lista;
         }
 
-        
-        public ICollection<string> ListaNomes(string term)
+        public ActionResult ListaNomes(string term)
         {
             List<string> Nomes = new List<string>();
             Nomes.AddRange(dbSE.Variaveis.Select(o => o.Nome).Where(a=>a.ToLower().Contains(term.ToLower())));
             Nomes.AddRange(CID(term).Where(a => (Nomes.Count(b=> b==a ) < 1)));            
             //Nomes.RemoveAll(a => Nomes.Count(b => b == a) > 2);
             //Nomes = Nomes.Where(o=>o.ToUpper().Contains(term.ToUpper())).ToList();
-            return Nomes;
+            return Json(Nomes, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]
