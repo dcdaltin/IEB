@@ -51,7 +51,7 @@
                 <div class="card card-body">
 
                     <div class="form-group">
-                        <div class="col-md-10">
+                        <div class="col">
                             @Html.EditorFor(model => model.Valores, new { htmlAttributes = new { @class = "form-control" } })
                             @Html.ValidationMessageFor(model => model.Valores, "", new { @class = "text-danger" })
                         </div>

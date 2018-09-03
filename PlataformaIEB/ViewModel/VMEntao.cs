@@ -22,6 +22,7 @@ namespace PlataformaIEB.ViewModel
         public string Valor { get; set; }
 
         [Required]
+        [Display(Name = "Confiança (%)")]
         public double Conf { get; set; }
 
         public int Pos { get; set; }

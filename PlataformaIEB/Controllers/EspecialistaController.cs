@@ -50,7 +50,6 @@ namespace PlataformaIEB.Controllers
                 VModel.Usuario = usuario.Id;
             }
             else return RedirectToAction("Login", "Autenticar", new { area = "" });
-           
             return View(VModel);
         }
 
@@ -129,11 +128,11 @@ namespace PlataformaIEB.Controllers
         public List<string> CID(string termo)
         {
             List<string> Lista = new List<string>();
-            string C10 = @"C:\PlataformaIEB\CID10\CID10.xml";
-            string C0 = @"C:\PlataformaIEB\CID10\CID-O.xml";
+            string C10 = @"C:\Users\dalto\source\repos\PlataformaIEB\PlataformaIEB\CID10\CID10.xml";     //@"C:\PlataformaIEB\CID10\CID10.xml";
+            string C0 = @"C:\Users\dalto\source\repos\PlataformaIEB\PlataformaIEB\CID10\CID-O.xml";    //@"C:\PlataformaIEB\CID10\CID-O.xml";
             XmlDocument doc = new XmlDocument();
             doc.XmlResolver = new XmlUrlResolver();
-            doc.Load(C10);
+            doc.Load(C0);
             var teste = doc.GetElementsByTagName("subcategoria");
             foreach (XmlNode item in teste)
             {
@@ -141,7 +140,7 @@ namespace PlataformaIEB.Controllers
                 if (temp.ToLower().Contains(termo.ToLower())) Lista.Add(temp);
             }
 
-            doc.Load(C0);
+            doc.Load(C10);
             teste = doc.GetElementsByTagName("subcategoria");
             foreach (XmlNode item in teste)
             {
@@ -399,6 +398,7 @@ namespace PlataformaIEB.Controllers
             Modelo.RegraID = ID;
             Modelo.Regra = dbSE.Regras.Where(o => o.ID == ID).SingleOrDefault();
             Modelo.Variaveis = dbSE.Variaveis.Where(o => o.Base.Select(a => a.Base.ID).Contains(Modelo.Regra.Base.ID)).Select(a => a.Nome).ToList();
+            Modelo.Conf = 100;
             
             return View(Modelo);
         }

@@ -230,6 +230,9 @@ namespace PlataformaIEB.Controllers
                             item.Valor = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(item.Valor);
                             item.Consulta = Consulta;
                             item.ConsultaID = Consulta.ID;
+
+                            item.Confianca = 100;
+
                             db.Valores.Add(item);
                         }
 
@@ -240,7 +243,7 @@ namespace PlataformaIEB.Controllers
                     Modelo.Pacientes = db.Pacientes.Select(a => a.Nome).ToList();
                     Modelo.Usuario = db.Usuarios.Where(a => a.Id == Modelo.Usuario.Id).SingleOrDefault();
                     ModelState.AddModelError("", "Nenhum dado de entrada");
-                    return View(Modelo);
+                    return RedirectToAction("CadConsulta");
                 }
 
                 try
@@ -255,14 +258,14 @@ namespace PlataformaIEB.Controllers
                     Modelo.Pacientes = db.Pacientes.Select(a => a.Nome).ToList();
                     Modelo.Usuario = db.Usuarios.Where(a => a.Id == Modelo.Usuario.Id).SingleOrDefault();
                     ModelState.AddModelError("", "Erro grave! Favor entrar em contato");
-                    return View(Modelo);
+                    return RedirectToAction("CadConsulta");
                 }
             }
 
             Modelo.Pacientes = db.Pacientes.Select(a => a.Nome).ToList();
             Modelo.Usuario = db.Usuarios.Where(a => a.Id == Modelo.Usuario.Id).SingleOrDefault();
             ModelState.AddModelError("", "Selecione um paciente");
-            return View(Modelo);
+            return RedirectToAction("CadConsulta");
 
         }
 

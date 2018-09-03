@@ -17,7 +17,7 @@ namespace PlataformaIEB.Models
         [Key, Column(Order = 1), ForeignKey("Variavel")]
         public int VariavelID { get; set; }
 
-        [DisplayName("Confiança")]
+        [DisplayName("Confiança (%)")]
         public double Confianca { get; set; }
 
         [Required]
