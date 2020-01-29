@@ -191,7 +191,9 @@ namespace PlataformaIEB.Controllers
             var Tokken = Request.Cookies["TokkenCookie"].Value;
             Usuario usuario = db.Usuarios.Where(a => a.AutID == Tokken).SingleOrDefault();
             List<ListaValores> Valores = new List<ListaValores>();
-            var Variaveis = db.Variaveis.Where(a => a.Base.Where(o => !o.Objetivo).Select(b => b.Base.Usuario.Id).Contains(usuario.Id));
+            var Variaveis = db.Variaveis.Where(
+                a => a.Base.Where(o => !o.Objetivo).Select(b => b.Base.Usuario.Id).Contains(usuario.Id) 
+                || a.Nome == "Idade" || a.Nome == "Sexo");
 
             foreach (var item in Variaveis)
             {
@@ -210,9 +212,11 @@ namespace PlataformaIEB.Controllers
         {
             if (Modelo.Nome != null)
             {
+                Paciente paciente = db.Pacientes.Where(a => a.Nome == Modelo.Nome).SingleOrDefault();
+
                 Consulta Consulta = new Consulta()
                 {
-                    Paciente = db.Pacientes.Where(a => a.Nome == Modelo.Nome).SingleOrDefault(),
+                    Paciente = paciente,
                     Data = DateTime.Now,
                     Medico = db.Medicos.Where(a => a.Id == Modelo.Usuario.Id).SingleOrDefault(),
                     Observacao = Modelo.Observacao
@@ -221,10 +225,16 @@ namespace PlataformaIEB.Controllers
 
                 db.Consultas.Add(Consulta);
 
-                if (Modelo.Valores.Count()>0)
-                {
+                var procPadrao = db.Variaveis.Where(a => a.Nome.Contains("Sexo") || a.Nome.Contains("Idade")).ToList();
+
+                if (Modelo.Valores.Any() || !string.IsNullOrEmpty(Modelo.Observacao))
+                {                   
+
                     foreach (var item in Modelo.Valores)
                     {
+                        item.Valor = (item.VariavelID == procPadrao.Where(a => a.Nome.Contains("Sexo")).Select(a=>a.ID).Single() && item.Valor == null) ? paciente.Sexo : item.Valor;
+                        item.Valor = (item.VariavelID == procPadrao.Where(a => a.Nome.Contains("Idade")).Select(a => a.ID).Single() && item.Valor == null) ? CalculaIdade(paciente.Nascimento).ToString() : item.Valor;
+
                         if (item.Valor != null)
                         {
                             item.Valor = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(item.Valor);
@@ -235,7 +245,6 @@ namespace PlataformaIEB.Controllers
 
                             db.Valores.Add(item);
                         }
-
                     }
                 }
                 else
@@ -245,7 +254,7 @@ namespace PlataformaIEB.Controllers
                     ModelState.AddModelError("", "Nenhum dado de entrada");
                     return RedirectToAction("CadConsulta");
                 }
-
+                db.SaveChanges();
                 try
                 {
                     db.SaveChanges();
@@ -258,7 +267,7 @@ namespace PlataformaIEB.Controllers
                     Modelo.Pacientes = db.Pacientes.Select(a => a.Nome).ToList();
                     Modelo.Usuario = db.Usuarios.Where(a => a.Id == Modelo.Usuario.Id).SingleOrDefault();
                     ModelState.AddModelError("", "Erro grave! Favor entrar em contato");
-                    return RedirectToAction("CadConsulta");
+                    return View(Modelo);
                 }
             }
 

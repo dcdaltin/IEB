@@ -177,6 +177,7 @@
     </Compile>
     <Compile Include="Migrations\Shell\Configuration.cs" />
     <Compile Include="Models\Shell\Agentes.cs" />
+    <Compile Include="Models\Shell\MotorOpcoes.cs" />
     <Compile Include="Models\Usuario.cs" />
     <Compile Include="Models\Shell\BancoDeDados.cs" />
     <Compile Include="Models\Shell\BaseDeConhecimento.cs" />
@@ -363,6 +364,8 @@
     <Content Include="Views\Cadastro\EditorTemplates\ListaValores.cshtml" />
     <Content Include="Views\Cadastro\EditorTemplates\Variavel.cshtml" />
     <Content Include="Views\Cadastro\Teste.cshtml" />
+    <Content Include="Views\Especialista\Teste.cshtml" />
+    <Content Include="Views\Especialista\Resultado.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

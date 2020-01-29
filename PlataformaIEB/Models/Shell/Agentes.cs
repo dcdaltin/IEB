@@ -12,8 +12,6 @@ namespace PlataformaIEB.Models
 
         public ICollection<Regra> Aplicadas { get; set; }
 
-        public List<Regra> RegrasAux { get; set; }
-
         private static List<Tuple<Cabecario, double>> Cabecas { get; set; }
 
         private static ICollection<Agente> Agentes { get; set; }
@@ -27,7 +25,6 @@ namespace PlataformaIEB.Models
             Consulta = Cons;
             Cabecas = new List<Tuple<Cabecario, double>>();
             Aplicadas = new List<Regra>();
-            RegrasAux = new List<Regra>();
             Agentes = new List<Agente>();
         }
 
@@ -64,13 +61,11 @@ namespace PlataformaIEB.Models
 
         private void Trabalhar()
         {
-            foreach (Agente item in Agentes)
+            Parallel.ForEach(Agentes, a =>
             {
-                RegrasAux.AddRange(item.Regras.Where(a => !RegrasAux.Contains(a)));
-            }
-
-            RegrasAux.RemoveAll(a => Aplicadas.Contains(a));
-            Montagem(RegrasAux);
+                Montagem(a);
+                a.RemoveRegras(Aplicadas);
+            });
 
             if (flag)
             {
@@ -79,9 +74,9 @@ namespace PlataformaIEB.Models
             }
         }
 
-        private void Montagem(ICollection<Regra> regras)
+        private void Montagem(Agente agente)
         {
-            Parallel.ForEach(regras, a => Montar(a));
+            Parallel.ForEach(agente.Regras, a => Montar(a));
         }
 
         private void Montar(Regra Regra)

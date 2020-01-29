@@ -10,9 +10,15 @@
     {
         foreach (var entao in regra.Entao)
         {
-            if (Model.Objetivos.Where(a=>a.ID == entao.VarID).Count() > 0)                
+            if (Model.Objetivos.Where(a => a.ID == entao.VarID).Count() > 0)
             {
-                <p class="alert-warning">Objetivo:</p>
+                <br />
+                <div class="row alert-warning">Objetivo:</div>
+            }
+            else
+            {
+                <br />
+                <div class="row alert-primary">Indicação:</div>
             }
             <div class="row">
                 <div class="col">

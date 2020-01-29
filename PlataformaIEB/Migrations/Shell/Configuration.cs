@@ -47,7 +47,7 @@ namespace PlataformaIEB.Migrations.Shell
             Medico medico = new Medico();
             medico.CRM = 123;
             medico.Email = "b@b.b";
-            medico.Nome = "Medco";
+            medico.Nome = "Médico";
             medico.Senha = Crypto.HashPassword("123");
             medico.Especialidade = "Neuro";
             medico.Endereco = "asdfad";
@@ -71,6 +71,14 @@ namespace PlataformaIEB.Migrations.Shell
             paciente.Responsavel = "João";
             paciente.Sexo = "Masculino";
             context.Pacientes.Add(paciente);
+
+            Variavel sexo = new Variavel();
+            sexo.Nome = "Sexo";
+            context.Variaveis.Add(sexo);
+
+            Variavel idade = new Variavel();
+            idade.Nome = "Idade";
+            context.Variaveis.Add(idade);
 
             context.SaveChanges();
 

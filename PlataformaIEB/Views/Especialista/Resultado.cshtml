@@ -1,0 +1,36 @@
+﻿@model PlataformaIEB.ViewModel.VMTeste
+
+<div class="list-group pre-scrollable">
+    @if (Model.Aplicadas.Count() > 0)
+    {
+        foreach (var regra in Model.Aplicadas)
+        {
+            <a class="list-group-item list-group-item-action" data-toggle="collapse" href="#@regra.Nome" role="button" aria-expanded="false" aria-controls="collapseExample">
+                <h6>@regra.Nome</h6>
+            </a>
+            <div class="collapse" id="@regra.Nome">
+                <div class="card card-body">
+                    <nav class="nav flex-column">
+                        @foreach (var entao in regra.Entao)
+                        {
+                            if (Model.Objetivos.Where(a => a.ID == entao.VarID).Count() > 0)
+                            {
+                                <div class="nav-item alert-warning">
+                                    <em>Objetivo:</em>
+                                    <p>@entao.Variavel.Nome é igua a @entao.Valor</p>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="nav-item alert-primary">
+                                    <em>Indicação:</em>
+                                    <p>@entao.Variavel.Nome é igua a @entao.Valor</p>
+                                </div>
+                            }
+                        }
+                    </nav>
+                </div>
+            </div>
+        }
+    }
+</div>

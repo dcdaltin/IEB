@@ -1,0 +1,96 @@
+﻿@model PlataformaIEB.Models.VMConsulta
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+
+</head>
+
+@{
+    ViewBag.Title = "Cadastro de Médicos";
+    switch (Request.Cookies["CookieTipo"].Value)
+    {
+        case "ADMIN":
+            Layout = "~/Views/Shared/_LayoutADM.cshtml";
+            break;
+
+        case "Medico":
+            Layout = "~/Views/Shared/_LayoutMED.cshtml";
+            break;
+
+        case "Pesquisador":
+            Layout = "~/Views/Shared/_LayoutPES.cshtml";
+            break;
+
+        case "Paciente":
+            Layout = "~/Views/Shared/_LayoutPAC.cshtml";
+            break;
+    }
+}
+
+@section Scripts{
+    <script>
+        $("#AddressChecklistFilter").onclick(function (e) {
+            $.ajax({
+                url: '/Especialista/Resultado',
+                data: { busca: @Model },
+                success: function (msg) {
+                    $("#Partial").html(msg);
+                }
+            })
+        })
+    </script>
+}
+
+<div class="container row">
+    <div class="col-sm">
+        <div class="card">
+            <div class="card-header"><h3>Resultados</h3></div>
+            <div class="card-body">
+                <div id="Partial">@Html.Action("Resultado")</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg">
+        <div class="jumbotron">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-horizontal">
+                    <h4>Aplicar Valores</h4>
+                    <hr />
+                    @Html.Label("Variáveis")
+                    <div class="row">
+                        @Html.ActionLink("Clique aqui para adicionar campos de registro (variáveis)", "Base", "Especialista", new { area = "" }, new { @class = "nav-link" })
+                    </div>
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group">
+                        <div class="col">
+                            @Html.EditorFor(model => model.Valores, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Valores, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Observacao, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col">
+                            <textarea class="form-control" id="Observacao" name="Observacao" rows="5" style="min-width:100%"></textarea>
+                            @Html.ValidationMessageFor(model => model.Observacao, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row justify-content-end">
+                            <input type="button" name="AddressChecklistFilter" id="AddressChecklistFilter" value="Processar" class="btn btn-outline-success" />
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+
+
+</div>
+
+
+

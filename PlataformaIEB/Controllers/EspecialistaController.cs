@@ -63,7 +63,15 @@ namespace PlataformaIEB.Controllers
                     Nome = Model.Nome,
                     Usuario = dbSE.Usuarios.Where(a => a.Id == Model.Usuario).SingleOrDefault()
                 };
+
                 dbSE.Bases.Add(Base);
+
+                VarBase vinculaSexo = new VarBase { Variavel = dbSE.Variaveis.Where(o => o.Nome == "Sexo").SingleOrDefault(), Base = Base };
+                dbSE.VarBase.Add(vinculaSexo);
+
+                VarBase vinculaIdade = new VarBase { Variavel = dbSE.Variaveis.Where(o => o.Nome == "Idade").SingleOrDefault(), Base = Base };
+                dbSE.VarBase.Add(vinculaIdade);
+
                 dbSE.SaveChanges();
 
                 return RedirectToAction("Variavel/" + Base.ID);
@@ -128,8 +136,8 @@ namespace PlataformaIEB.Controllers
         public List<string> CID(string termo)
         {
             List<string> Lista = new List<string>();
-            string C10 = @"C:\Users\dalto\source\repos\PlataformaIEB\PlataformaIEB\CID10\CID10.xml";     //@"C:\PlataformaIEB\CID10\CID10.xml";
-            string C0 = @"C:\Users\dalto\source\repos\PlataformaIEB\PlataformaIEB\CID10\CID-O.xml";    //@"C:\PlataformaIEB\CID10\CID-O.xml";
+            string C10 = @"C:\PlataformaIEB\CID10\CID10.xml";
+            string C0 = @"C:\PlataformaIEB\CID10\CID-O.xml";
             XmlDocument doc = new XmlDocument();
             doc.XmlResolver = new XmlUrlResolver();
             doc.Load(C0);
@@ -469,15 +477,38 @@ namespace PlataformaIEB.Controllers
         //    return RedirectToAction("Entrada/" + ID);
         //}
 
-        //[HttpGet]
-        //public ActionResult Entrada(int ID)
-        //{
-        //    VMEntrada Modelo = new VMEntrada();
-        //    Modelo.Id = ID;
-        //    Modelo.Variaveis = dbSE.Variaveis.Where(o => (o.Base.ID == ID) & !(o.Objetivo)).ToList();
+        public ActionResult Teste()
+        {
+            var Tokken = Request.Cookies["TokkenCookie"].Value;
+            Usuario usuario = dbSE.Usuarios.Where(a => a.AutID == Tokken).SingleOrDefault();
+            List<ListaValores> Valores = new List<ListaValores>();
+            var Variaveis = dbSE.Variaveis.Where(a => a.Base.Where(o => !o.Objetivo).Select(b => b.Base.Usuario.Id).Contains(usuario.Id));
 
-        //    return View(Modelo);
-        //}
+            foreach (var item in Variaveis)
+            {
+                Valores.Add(new ListaValores() { Variavel = item, VariavelID = item.ID, Confianca = 100 });
+            }
+
+            VMConsulta Modelo = new VMConsulta() { Valores = Valores };
+            return View(Modelo);
+        }
+
+        public ActionResult Resultado(Consulta Cons)
+        {
+            var Tokken = Request.Cookies["TokkenCookie"].Value;
+            Usuario usuario = dbSE.Usuarios.Where(a => a.AutID == Tokken).SingleOrDefault();
+            Buscador busca = new Buscador(Cons);
+            busca.CriarAgentes();
+            if (busca.Aplicadas.Count > 0)
+            {
+                VMTeste teste = new VMTeste();
+                teste.Aplicadas = busca.Aplicadas.ToList();
+                teste.Objetivos = dbSE.Variaveis.Where(a => a.Base.Where(b => b.Base.Usuario.Id == usuario.Id).Select(b => b.Objetivo).Contains(true)).ToList();
+                return View(teste);
+            }
+
+            return RedirectToAction("CadConsulta");
+        }
 
         //[HttpPost]
         //public ActionResult Entrada(VMEntrada Modelo)

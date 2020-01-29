@@ -10,6 +10,12 @@ namespace PlataformaIEB.Models
 {
     public class VMConsulta
     {
+        public VMConsulta()
+        {
+            Valores = new List<ListaValores>();
+            Pacientes = new List<string>();
+        }
+
         public List<ListaValores> Valores { get; set; }
 
         public Usuario Usuario { get; set; }
@@ -20,7 +26,6 @@ namespace PlataformaIEB.Models
         public List<string> Pacientes { get; set; }
 
         public string Nome { get; set; }
-
 
         public int PacienteID { get; set; }
 

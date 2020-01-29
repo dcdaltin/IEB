@@ -1,77 +1,86 @@
-﻿@model PlataformaIEB.ViewModel.VMEntrada
+﻿@model PlataformaIEB.Models.VMConsulta
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+</head>
+
 @{
-    ViewBag.Title = "Entrada";
-    Layout = "~/Areas/RestritoPesquisador/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Teste";
+    switch (Request.Cookies["CookieTipo"].Value)
+    {
+        case "ADMIN":
+            Layout = "~/Views/Shared/_LayoutADM.cshtml";
+            break;
+
+        case "Medico":
+            Layout = "~/Views/Shared/_LayoutMED.cshtml";
+            break;
+
+        case "Pesquisador":
+            Layout = "~/Views/Shared/_LayoutPES.cshtml";
+            break;
+    }
 }
 
-<div class="row">
-    <div class="col-md-2">
-        <table class="table table-responsive">
-            <caption><h2>Variaveis</h2></caption>
-                @foreach (var item in Model.Variaveis)
-                {
-                    <thead>
-                        <tr>
-                            <td><h3> @item.Nome </h3></td>
-                        </tr>
-                        <tr>
-                            <td>Valor</td>
-                            <td>Confiança</td>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        @foreach (var valor in item.Valores)
-                        {
-                            <tr>
-                                <td>@valor.Valor</td>
-                                <td>@((valor.Confianca * 100).ToString())</td>
-                            </tr>
-                        }
-                    </tbody>
-                }
-        </table>
-    </div>
-
-    <div class="col-lg-10" style="text-align:center">
-        @using (Html.BeginForm())
-        {
-            @Html.AntiForgeryToken()
-            @Html.HiddenFor(o=>o.Id)
-
-            <h2>Nova Condição</h2>
-            <p>Para adicionar uma nova regra, entre com um novo nome e uma condição. Após, selecione as opções nos botões Adicionar Condição ou Adicionar Ação</p>
-            <div class="row">
-                <div class="form-group">
-                    <table class="table table-responsive" style="align-items:center">
-                        <thead>
-                            <tr></tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>@Html.DisplayNameFor(m => m.Var)</td>
-                                <td>@Html.DropDownListFor(m => m.Var, new SelectList(Model.Variaveis.Select(o=>o.Nome)), "Selecione uma Variavel...", new { @class = "form-control" })</td>
-                                <td>@Html.DisplayNameFor(m => m.Valor)</td>
-                                <td>@Html.EditorFor(m => m.Valor, new { @class = "form-control" })</td>
-                                <td>@Html.DisplayNameFor(m => m.Conf)</td>
-                                <td>@Html.EditorFor(m => m.Conf, new { @class = "form-control" })</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <span class="help-block">
-                        @Html.ValidationMessageFor(m => m.Var)
-                    </span>
+<div class="jumbotron-fluid">
+    <div class="card">
+        <div class="card-header"><h3>Teste</h3></div>
+        <div class="card-body">
+                @Html.Label("Variáveis")
+                <div class="row">
+                    @Html.ActionLink("Clique aqui para adicionar campos de registro (variáveis)", "Base", "Especialista", new { area = "" }, new { @class = "nav-link" })
                 </div>
-            </div>
-            <div class="row" style="text-align:right">
-                <input type="submit" class="btn btn-default" value="Adicionar" />
-            </div>
+                <div class="card card-body">
+                    <div class="form-group">
+                        <div class="col">
+                            @Html.EditorFor(model => model.Valores, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Valores, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Observacao, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col">
+                            <textarea class="form-control" id="Observacao" name="Observacao" rows="5" style="min-width:100%"></textarea>
+                            @Html.ValidationMessageFor(model => model.Observacao, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row justify-content-end">
+                            <input type="button" id="enviar" value="Processar" class="btn btn-outline-success" />
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+    <div id="resultado">
+        @if (Model.Aplicadas.Count() > 0)
+        {
+            <p class="alert-info">Encontramos as seguintes informações baseadas na consulta de @Model.Consulta.Paciente.Nome:</p>
+            foreach (var regra in Model.Aplicadas)
+            {
+                foreach (var entao in regra.Entao)
+                {
+                    if (Model.Objetivos.Where(a => a.ID == entao.VarID).Count() > 0)
+                    {
+                        <br />
+                        <div class="row alert-warning">Objetivo:</div>
+                    }
+                    else
+                    {
+                        <br />
+                        <div class="row alert-primary">Indicação:</div>
+                    }
+                    <div class="row">
+                        <div class="col">
+                            @entao.Variavel.Nome é igua a @entao.Valor ;
+                        </div>
+                    </div>
+                }
+            }
+        }
+        else
+        {
 
-            <div class="row">
-                <p><h2>Resultado</h2></p>
-                <p>@Html.Action("Resultado", new { ID = Model.Id })</p>
-            </div>
         }
     </div>
 </div>
-
